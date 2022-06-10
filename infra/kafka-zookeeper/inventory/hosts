@@ -1,0 +1,15 @@
+[kafka]
+10.72.5.110 ansible_user=ubuntu
+10.72.5.111 ansible_user=ubuntu
+10.72.5.112 ansible_user=ubuntu
+
+[zookeeper]
+10.72.5.110 ansible_user=ubuntu
+10.72.5.111 ansible_user=ubuntu
+10.72.5.112 ansible_user=ubuntu
+
+[manager]
+10.72.5.110 ansible_user=ubuntu
+
+[connect]
+10.72.5.110 ansible_user=ubuntu
