@@ -1,0 +1,1 @@
+ansible -i hosts.yaml -a "systemctl disable ceph-crash.service ceph-fuse.target ceph-mds.target ceph-mgr.target ceph-mon.target ceph-osd.target ceph.target" kube-worker -b

@@ -1,0 +1,80 @@
+all:
+  hosts:
+    master-0:
+      ansible_host: 10.72.5.110
+      ip: 10.72.5.110
+      access_ip: 10.72.5.110
+    master-1:
+      ansible_host: 10.72.5.111
+      ip: 10.72.5.111
+      access_ip: 10.72.5.111
+    master-2:
+      ansible_host: 10.72.5.112
+      ip: 10.72.5.112
+      access_ip: 10.72.5.112
+    infra-0:
+      ansible_host: 10.72.5.120
+      ip: 10.72.5.120
+      access_ip: 10.72.5.120
+      node_labels:
+        node-role.kubernetes.io/worker: "true"
+        node-role.kubernetes.io/infra: "true"
+    infra-1:
+      ansible_host: 10.72.5.121
+      ip: 10.72.5.121
+      access_ip: 10.72.5.121
+      node_labels:
+        node-role.kubernetes.io/worker: "true"
+        node-role.kubernetes.io/infra: "true"
+    compute-0:
+      ansible_host: 10.72.5.130
+      ip: 10.72.5.130
+      access_ip: 10.72.5.130
+      node_labels:
+        node-role.kubernetes.io/worker: "true"
+    compute-1:
+      ansible_host: 10.72.5.131
+      ip: 10.72.5.131
+      access_ip: 10.72.5.131
+      node_labels:
+        node-role.kubernetes.io/worker: "true"
+    compute-2:
+      ansible_host: 10.72.5.132
+      ip: 10.72.5.132
+      access_ip: 10.72.5.132
+      node_labels:
+        node-role.kubernetes.io/worker: "true"
+  children:
+    kube-master:
+      hosts:
+        master-0:
+        master-1:
+        master-2:
+    kube-node:
+      hosts:
+        master-0:
+        master-1:
+        master-2:
+        infra-0:
+        infra-1:
+        compute-0:
+        compute-1:
+        compute-2:
+    kube-worker:
+      hosts:
+        infra-0:
+        infra-1:
+        compute-0:
+        compute-1:
+        compute-2:
+    etcd:
+      hosts:
+        master-0:
+        master-1:
+        master-2:
+    k8s-cluster:
+      children:
+        kube-master:
+        kube-node:
+    calico-rr:
+      hosts: {}
