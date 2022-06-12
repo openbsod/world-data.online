@@ -1,0 +1,19 @@
+- name: Check if java 8 alread installed
+  command: java -version 2>&1 | grep version | awk '{print $3}' | sed 's/"//g'
+  register: java_version
+  ignore_errors: True
+ 
+- debug: msg="Java not installed"
+  when: java_version is failed
+ 
+- name: installJavaRepo
+  apt_repository: repo='ppa:openjdk-r/ppa'
+  when: java_version is failed
+ 
+- name: updateCache
+  apt: update_cache=yes
+  when: java_version is failed
+ 
+- name: installJava
+  apt: name=openjdk-8-jdk state=present
+  when: java_version is failed

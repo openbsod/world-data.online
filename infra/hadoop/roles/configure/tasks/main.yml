@@ -1,0 +1,33 @@
+- name: Template core conf file
+  ansible.builtin.template:
+    src: core-site.xml.j2
+    dest: /etc/hadoop/core-site.xml
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    mode: 0640
+
+- name: Template hdfs conf file
+  ansible.builtin.template:
+    src: hdfs-site.xml.j2
+    dest: /etc/hadoop/hdfs-site.xml
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    mode: 0640
+
+- name: Recursively change ownership of the /etc/hadoop directory
+  ansible.builtin.file:
+    path: "{{ hadoop_dir }}"
+    state: directory
+    recurse: yes
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+  when: inventory_hostname in groups['hadoop-node']
+
+- name: Recursively change ownership of the /hadoop directory
+  ansible.builtin.file:
+    path: "{{ cluster_dir }}"
+    state: directory
+    recurse: yes
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+  when: inventory_hostname in groups['hadoop-node']

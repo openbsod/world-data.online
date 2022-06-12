@@ -1,0 +1,89 @@
+- name: Start journalnodes
+  become: true
+  become_user: hadoop
+  shell: |
+    "/hadoop/sbin/hadoop-daemon.sh start journalnode"
+  when: inventory_hostname in groups['hadoop-journalnode']
+
+- name: Format namenode1
+  become: true
+  become_user: hadoop
+  shell: |
+    "hdfs namenode -format"
+  run_once: true
+  delegate_to: namenode-0
+
+- name: Start namenode1 as Active
+  become: true
+  become_user: hadoop
+  shell: |
+    "/hadoop/sbin/hadoop-daemon.sh start namenode"
+  run_once: true
+  delegate_to: namenode-0
+
+- name: Bootstrap namenode2 as StandBy
+  become: true
+  become_user: hadoop
+  shell: |
+    "hdfs namenode -bootstrapStandby"
+  run_once: true
+  delegate_to: namenode-1
+
+- name: Start namenode2 as StandBy
+  become: true
+  become_user: hadoop
+  shell: |
+    "/hadoop/sbin/hadoop-daemon.sh start namenode"
+  run_once: true
+  delegate_to: namenode-1
+
+- name: Start datanodes
+  become: true
+  become_user: hadoop
+  shell: |
+    "/hadoop/sbin/hadoop-daemon.sh start datanode"
+  when: inventory_hostname in groups['hadoop-datanode']
+
+- name: Format Zookeeper Failover Controller at namenode1
+  become: true
+  become_user: hadoop
+  shell: |
+    "hdfs zkfc -formatZK"
+  run_once: true
+  delegate_to: namenode-0
+
+- name: Start Zookeeper Failover Controller at namenode1 as Active
+  become: true
+  become_user: hadoop
+  shell: |
+    "/hadoop/sbin/hadoop-daemon.sh start zkfc"
+  run_once: true
+  delegate_to: namenode-0
+
+- name: Start Zookeeper Failover Controller at namenode2 as StandBy
+  become: true
+  become_user: hadoop
+  shell: |
+    "/hadoop/sbin/hadoop-daemon.sh start zkfc"
+  run_once: true
+  delegate_to: namenode-1
+
+- name: check if everything runs as intended
+  become: true
+  become_user: hadoop
+  shell: |
+    "hdfs haadmin -getServiceState namenode1 && hdfs haadmin -getServiceState namenode2"
+  run_once: true
+  delegate_to: namenode-0
+
+  # manual recheck in order to be assured
+
+  # hadoop@infra-0:~$ hdfs haadmin -getServiceState namenode1
+  # WARNING: log4j.properties is not found. HADOOP_CONF_DIR may be incomplete.
+  # active
+
+  # hadoop@infra-0:~$ hdfs haadmin -getServiceState namenode2
+  # WARNING: log4j.properties is not found. HADOOP_CONF_DIR may be incomplete.
+  # standby
+  
+  # Congrats! There is your very own enterprise-grade Hadoop HA-cluster.

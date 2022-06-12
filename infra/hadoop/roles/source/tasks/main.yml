@@ -1,0 +1,27 @@
+- stat:
+    path: "{{ source_dir }}/hadoop-3.3.3.tar.gz"
+  register: hadoop_source_file
+
+- name: download the source
+  get_url:
+    url: "https://archive.apache.org/dist/hadoop/common/hadoop-3.3.3/hadoop-3.3.3.tar.gz"
+    dest: "{{ source_dir }}/hadoop-3.3.3.tar.gz"
+    mode: 0440
+  when: hadoop_source_file.stat.exists == False
+ 
+- name: Extract hadoop source
+  unarchive:
+    src: "{{ source_dir }}/hadoop-3.3.3.tar.gz"
+    dest: "{{ cluster_dir }}"
+    extra_opts: [--strip-components=1]
+    remote_src: yes
+  when: inventory_hostname in groups['hadoop-node']
+
+- name: Recursively change ownership of the hadoop directory
+  ansible.builtin.file:
+    path: "{{ cluster_dir }}"
+    state: directory
+    recurse: yes
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+  when: inventory_hostname in groups['hadoop-node']

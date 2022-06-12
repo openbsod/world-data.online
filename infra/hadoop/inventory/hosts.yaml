@@ -1,0 +1,69 @@
+all:
+  hosts:
+    journalnode-0:
+      ansible_host: 10.72.5.110
+      ip: 10.72.5.110
+      access_ip: 10.72.5.110
+    journalnode-1:
+      ansible_host: 10.72.5.111
+      ip: 10.72.5.111
+      access_ip: 10.72.5.111
+    journalnode-2:
+      ansible_host: 10.72.5.112
+      ip: 10.72.5.112
+      access_ip: 10.72.5.112
+    namenode-0:
+      ansible_host: 10.72.5.120
+      ip: 10.72.5.120
+      access_ip: 10.72.5.120
+    namenode-1:
+      ansible_host: 10.72.5.121
+      ip: 10.72.5.121
+      access_ip: 10.72.5.121
+    datanode-0:
+      ansible_host: 10.72.5.130
+      ip: 10.72.5.130
+      access_ip: 10.72.5.130
+    datanode-1:
+      ansible_host: 10.72.5.131
+      ip: 10.72.5.131
+      access_ip: 10.72.5.131
+    datanode-2:
+      ansible_host: 10.72.5.132
+      ip: 10.72.5.132
+      access_ip: 10.72.5.132
+  children:
+    hadoop-journalnode:
+      hosts:
+        journalnode-0:
+        journalnode-1:
+        journalnode-2:
+    hadoop-node:
+      hosts:
+        journalnode-0:
+        journalnode-1:
+        journalnode-2:
+        namenode-0:
+        namenode-1:
+        datanode-0:
+        datanode-1:
+        datanode-2:
+    hadoop-namenode:
+      hosts:
+        namenode-0:
+        namenode-1:
+    hadoop-datanode:
+      hosts:
+        datanode-0:
+        datanode-1:
+        datanode-2:
+    zk:
+      hosts:
+        journalnode-0:
+        journalnode-1:
+        journalnode-2:
+    hadoop-cluster:
+      children:
+        hadoop-journalnode:
+        hadoop-namenode:
+        hadoop-datanode:

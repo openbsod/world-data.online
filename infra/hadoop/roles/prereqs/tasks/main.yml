@@ -1,0 +1,66 @@
+- name: Ensure group hadoop exists
+  ansible.builtin.group:
+    name: "{{ hadoop_group }}"
+    state: present
+
+- name: Add hadoop user
+  ansible.builtin.user:
+    name: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    shell: "/bin/bash"
+    comment: hadoop user
+  when: inventory_hostname in groups['hadoop-node']
+
+- name: Template .bashrc file
+  ansible.builtin.template:
+    src: .bashrc.j2
+    dest: /home/hadoop/.bashrc
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    mode: 0640
+
+- name: Create /etc/hadoop directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ hadoop_dir }}"
+    state: directory
+    mode: '0755'
+  when: inventory_hostname in groups['hadoop-node']
+
+- name: Recursively change ownership of the /etc/hadoop directory
+  ansible.builtin.file:
+    path: "{{ hadoop_dir }}"
+    state: directory
+    recurse: yes
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+  when: inventory_hostname in groups['hadoop-node']
+
+- name: Create /hadoop directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ cluster_dir }}"
+    state: directory
+    mode: '0755'
+  when: inventory_hostname in groups['hadoop-node']
+
+- name: Create /hadoop/data/namenode directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ cluster_dir }}/data/namenode"
+    state: directory
+    mode: '0755'
+  when: inventory_hostname in groups['hadoop-namenode']
+
+- name: Create /hadoop/data/datanode directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ cluster_dir }}/data/datanode"
+    state: directory
+    mode: '0755'
+  when: inventory_hostname in groups['hadoop-datanode']  
+
+- name: Recursively change ownership of the /hadoop directory
+  ansible.builtin.file:
+    path: "{{ cluster_dir }}"
+    state: directory
+    recurse: yes
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+  when: inventory_hostname in groups['hadoop-node']
