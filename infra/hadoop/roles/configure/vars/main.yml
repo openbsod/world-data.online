@@ -2,3 +2,4 @@ hadoop_user: "hadoop"
 hadoop_group: "hadoop"
 hadoop_dir: "/etc/hadoop"
 cluster_dir: "/hadoop"
+yarn_name: yarn

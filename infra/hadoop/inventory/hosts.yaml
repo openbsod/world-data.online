@@ -4,22 +4,35 @@ all:
       ansible_host: 10.72.5.110
       ip: 10.72.5.110
       access_ip: 10.72.5.110
+      myid: 1
     journalnode-1:
       ansible_host: 10.72.5.111
       ip: 10.72.5.111
       access_ip: 10.72.5.111
+      myid: 2
     journalnode-2:
       ansible_host: 10.72.5.112
       ip: 10.72.5.112
       access_ip: 10.72.5.112
+      myid: 3
     namenode-0:
       ansible_host: 10.72.5.120
       ip: 10.72.5.120
       access_ip: 10.72.5.120
+      id: yrm1
+      peer_port: 8032
+      tracker_port: 8031
+      scheduler_port: 8030
+      web_port: 8088
     namenode-1:
       ansible_host: 10.72.5.121
       ip: 10.72.5.121
       access_ip: 10.72.5.121
+      id: yrm2
+      peer_port: 8032
+      tracker_port: 8031
+      scheduler_port: 8030
+      web_port: 8088
     datanode-0:
       ansible_host: 10.72.5.130
       ip: 10.72.5.130
@@ -52,12 +65,16 @@ all:
       hosts:
         namenode-0:
         namenode-1:
+    resourcemanagers:
+      hosts:
+        namenode-0:
+        namenode-1:        
     hadoop-datanode:
       hosts:
         datanode-0:
         datanode-1:
         datanode-2:
-    zk:
+    zk_nodes:
       hosts:
         journalnode-0:
         journalnode-1:
