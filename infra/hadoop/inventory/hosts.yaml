@@ -5,16 +5,19 @@ all:
       ip: 10.72.5.110
       access_ip: 10.72.5.110
       myid: 1
+      zk_port: 2181
     journalnode-1:
       ansible_host: 10.72.5.111
       ip: 10.72.5.111
       access_ip: 10.72.5.111
       myid: 2
+      zk_port: 2181
     journalnode-2:
       ansible_host: 10.72.5.112
       ip: 10.72.5.112
       access_ip: 10.72.5.112
       myid: 3
+      zk_port: 2181
     namenode-0:
       ansible_host: 10.72.5.120
       ip: 10.72.5.120
@@ -46,11 +49,6 @@ all:
       ip: 10.72.5.132
       access_ip: 10.72.5.132
   children:
-    hadoop-journalnode:
-      hosts:
-        journalnode-0:
-        journalnode-1:
-        journalnode-2:
     hadoop-node:
       hosts:
         journalnode-0:
@@ -61,24 +59,25 @@ all:
         datanode-0:
         datanode-1:
         datanode-2:
+    hadoop-journalnode:
+      hosts:
+        journalnode-0:
+        journalnode-1:
+        journalnode-2:
     hadoop-namenode:
       hosts:
         namenode-0:
         namenode-1:
-    resourcemanagers:
-      hosts:
-        namenode-0:
-        namenode-1:        
     hadoop-datanode:
       hosts:
         datanode-0:
         datanode-1:
         datanode-2:
-    zk_nodes:
+    zk-node:
       hosts:
-        journalnode-0:
-        journalnode-1:
-        journalnode-2:
+        10.72.5.110:
+        10.72.5.111:
+        10.72.5.112:
     hadoop-cluster:
       children:
         hadoop-journalnode:

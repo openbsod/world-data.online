@@ -1,185 +1,133 @@
 <?xml version="1.0"?>
 <configuration>
-
 <!-- Enable ResourceManager HA -->
-
 <property>
 <name>yarn.resourcemanager.ha.enabled</name>
 <value>true</value>
 </property>
-
 <!-- YARN Cluster name -->
-
 <property>
 <name>yarn.resourcemanager.cluster-id</name>
 <value>{{yarn_name}}</value>
 </property>
-
 <!-- ResourceManager The node list -->
-
 <property>
 <name>yarn.resourcemanager.ha.rm-ids</name>
-<value>{{ groups['resourcemanagers'] | map('extract', hostvars) | map(attribute='id') | join(',') }}</value>
+<value>{{ groups['hadoop-namenode'] | map('extract', hostvars) | map(attribute='id') | join(',') }}</value>
 </property>
-
 <!-- ResourceManager Address -->
-
-{% for host in groups['resourcemanagers'] %}
+{% for host in groups['hadoop-namenode'] %}
 <property>
 <name>yarn.resourcemanager.hostname.{{hostvars[host]['id']}}</name>
-<value>{{host}}</value>
+<value>{{hostvars[host]['access_ip']}}</value>
 </property>
 {% endfor %}
-
 <!-- ResourceManager Internal communication address -->
-
-{% for host in groups['resourcemanagers'] %}
+{% for host in groups['hadoop-namenode'] %}
 <property>
 <name>yarn.resourcemanager.address.{{hostvars[host]['id']}}</name>
-<value>{{host}}:{{hostvars[host]['peer_port']}}</value>
+<value>{{hostvars[host]['access_ip']}}:{{hostvars[host]['peer_port']}}</value>
 </property>
 {% endfor %}
-
 <!-- NM visit ResourceManager Address -->
-
-{% for host in groups['resourcemanagers'] %}
+{% for host in groups['hadoop-namenode'] %}
 <property>
 <name>yarn.resourcemanager.resource-tracker.{{hostvars[host]['id']}}</name>
-<value>{{host}}:{{hostvars[host]['tracker_port']}}</value>
+<value>{{hostvars[host]['access_ip']}}:{{hostvars[host]['tracker_port']}}</value>
 </property>
 {% endfor %}
-
 <!-- AM towards ResourceManager Application resource address -->
-
-{% for host in groups['resourcemanagers'] %}
+{% for host in groups['hadoop-namenode'] %}
 <property>
 <name>yarn.resourcemanager.scheduler.address.{{hostvars[host]['id']}}</name>
-<value>{{host}}:{{hostvars[host]['scheduler_port']}}</value>
+<value>{{hostvars[host]['access_ip']}}:{{hostvars[host]['scheduler_port']}}</value>
 </property>
 {% endfor %}
-
 <!-- ResourceManager Web entrance -->
-
-{% for host in groups['resourcemanagers'] %}
+{% for host in groups['hadoop-namenode'] %}
 <property>
 <name>yarn.resourcemanager.webapp.address.{{hostvars[host]['id']}}</name>
-<value>{{host}}:{{hostvars[host]['web_port']}}</value>
+<value>{{hostvars[host]['access_ip']}}:{{hostvars[host]['web_port']}}</value>
 </property>
 {% endfor %}
-
-<!-- Enable automatic fail over -->
-
+<!-- Enable automatic failover -->
 <property>
 <name>yarn.resourcemanager.recovery.enabled</name>
 <value>true</value>
 </property>
-
 <!-- Appoint Zookeeper list -->
-
 <property>
 <name>yarn.resourcemanager.zk-address</name>
-<value>{{ groups['zk_nodes'] | map('regex_replace','^(.+)$','\\1:2181') | join(',') }}</value>
+<value>{{ groups['zk-node'] | map('regex_replace','^(.+)$','\\1:2181') | join(',') }}</value>
 </property>
-
-<!-- Store status information in Zookeeper colony -->
-
+<!-- Store status information in Zookeeper ensemble -->
 <property>
 <name>yarn.resourcemanager.store.class</name>
 <value>org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore</value>
 </property>
-
 <!-- Reduce ResourceManager Handle Client Requested thread -->
-
 <property>
 <name>yarn.resourcemanager.scheduler.client.thread-count</name>
 <value>10</value>
 </property>
-
 <!-- prohibit NodeManager Adaptive hardware configuration （ Non exclusive node ）-->
-
 <property>
 <name>yarn.nodemanager.resource.detect-hardware-capbilities</name>
 <value>false</value>
 </property>
-
 <!-- NodeManager Assigned to the container CPU Check the number -->
-
 <property>
 <name>yarn.nodemanager.resource.cpu-vcores</name>
 <value>4</value>
 </property>
-
 <!-- NodeManager Use physical core to calculate CPU Number （ Optional ）-->
-
 <property>
-
 <name>yarn.nodemanager.resource.count-logical-processors-as-cores</name>
-
 <value>false</value>
-
 </property>
-
 <!-- Reduce NodeManager Using memory -->
-
 <property>
 <name>yarn.nodemanager.resource.memory-mb</name>
 <value>4096</value>
 </property>
-
 <!-- Lower limit of container memory -->
-
 <property>
 <name>yarn.scheduler.minimum-allocation-mb</name>
 <value>1024</value>
 </property>
-
 <!-- Maximum container memory -->
-
 <property>
 <name>yarn.scheduler.maximum-allocation-mb</name>
 <value>2048</value>
 </property>
-
 <!-- Containers CPU Lower limit -->
-
 <property>
 <name>yarn.scheduler.minimum-allocation-vcores</name>
 <value>1</value>
 </property>
-
 <!-- Containers CPU ceiling -->
-
 <property>
 <name>yarn.scheduler.maximum-allocation-vcores</name>
 <value>2</value>
 </property>
-
 <!-- Containers CPU ceiling -->
-
 <property>
 <name>yarn.scheduler.maximum-allocation-vcores</name>
 <value>2</value>
 </property>
-
 <!-- Turn off virtual memory checking -->
-
 <property>
 <name>yarn.nodemanager.vmem-check-enabled</name>
 <value>false</value>
 </property>
-
 <!-- Set the ratio of virtual memory to physical memory -->
-
 <property>
 <name>yarn.nodemanager.vmem-pmem-ratio</name>
 <value>2.1</value>
 </property>
-
 <!-- NodeManager stay MR In-process use Shuffle（ Optional ）-->
-
 <property>
 <name>yarn.nodemanager.aux-services</name>
 <value>mapreduce_shuffle</value>
 </property>
-
 </configuration>

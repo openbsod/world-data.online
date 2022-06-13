@@ -68,7 +68,7 @@
   run_once: true
   delegate_to: namenode-1
 
-- name: check if everything runs as intended
+- name: check if Zookeeper Failover Controller runs as intended
   become: true
   become_user: hadoop
   shell: |
@@ -76,7 +76,7 @@
   run_once: true
   delegate_to: namenode-0
 
-  # manual recheck in order to be assured
+  # manual recheck
 
   # hadoop@infra-0:~$ hdfs haadmin -getServiceState namenode1
   # WARNING: log4j.properties is not found. HADOOP_CONF_DIR may be incomplete.
@@ -85,5 +85,39 @@
   # hadoop@infra-0:~$ hdfs haadmin -getServiceState namenode2
   # WARNING: log4j.properties is not found. HADOOP_CONF_DIR may be incomplete.
   # standby
+
+- name: Start Yarn ResourceManager and Yarn NodeManager at namenode1
+  become: true
+  become_user: hadoop
+  shell: |
+    "/hadoop/sbin/start-yarn.sh"
+  run_once: true
+  delegate_to: namenode-0
+
+- name: Start Yarn ResourceManager and Yarn NodeManager at namenode2
+  become: true
+  become_user: hadoop
+  shell: |
+    "/hadoop/sbin/start-yarn.sh"
+  run_once: true
+  delegate_to: namenode-1
   
-  # Congrats! There is your very own enterprise-grade Hadoop HA-cluster.
+- name: check if Yarn ResourceManager and Yarn NodeManager runs as intended
+  become: true
+  become_user: hadoop
+  shell: |
+    "yarn rmadmin -getServiceState yrm1 && yarn rmadmin -getServiceState yrm2"
+  run_once: true
+  delegate_to: namenode-0
+
+  # manual recheck
+
+  # hadoop@infra-0:~$ yarn rmadmin -getServiceState yrm1
+  # WARNING: log4j.properties is not found. HADOOP_CONF_DIR may be incomplete.
+  # active
+
+  # hadoop@infra-0:~$ yarn rmadmin -getServiceState yrm2
+  # WARNING: log4j.properties is not found. HADOOP_CONF_DIR may be incomplete.
+  # standby  
+  
+  # Congrats! You've built your very own enterprise-grade Hadoop HA-cluster with Yarn and poetesses.

@@ -14,6 +14,15 @@
     group: "{{ hadoop_group }}"
     mode: 0640
 
+- name: Template yarn conf file
+  ansible.builtin.template:
+    src: yarn-site.xml.j2
+    dest: /etc/hadoop/yarn-site.xml
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    mode: 0640
+  when: inventory_hostname in groups['hadoop-namenode']
+
 - name: Recursively change ownership of the /etc/hadoop directory
   ansible.builtin.file:
     path: "{{ hadoop_dir }}"
