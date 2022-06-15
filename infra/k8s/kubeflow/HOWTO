@@ -1,0 +1,7 @@
+git clone https://github.com/kubeflow/manifests.git
+wget https://github.com/kubernetes-sigs/kustomize/releases/download/v3.2.0/kustomize_3.2.0_linux_amd64
+sudo mv kustomize_3.2.0_linux_amd64 /usr/local/bin/kustomize
+kustomize version
+
+minikube -p world-data kubectl -- create -f https://raw.githubusercontent.com/kubeflow/manifests/ab3296cdbe19fe36386f72a8b95e695d587d9e77/common/oidc-authservice/base/pvc.yaml
+while ! kustomize build example | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done

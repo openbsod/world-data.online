@@ -14,10 +14,10 @@ Environment="KAFKA_JMX_OPTS={{ kafka_jmx_opts }}"
 {% if kafka_gc_log_opts is defined and kafka_gc_log_opts is not none %}
 Environment="KAFKA_GC_LOG_OPTS={{ kafka_gc_log_opts }}"
 {% endif %}
-{% if kafka_opts is defined and  kafka_opts is not none  %}
+{% if kafka_opts is defined and  kafka_opts is not none %}
 Environment="KAFKA_OPTS={{ kafka_opts }}"
 {% endif %}
-{% if jmx_port is defined and jmx_port is not none  %}
+{% if jmx_port is defined and jmx_port is not none %}
 Environment="JMX_PORT={{ jmx_port }}"
 {% endif %}
 

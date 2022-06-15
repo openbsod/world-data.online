@@ -34,7 +34,7 @@ kafka_monitor_kafdrop_dir: /opt/kafdrop
 kafka_heap_opts: -Xmx512M -Xms512M
 kafka_jmx_opts: -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.net.preferIPv4Stack=true -Dcom.sun.management.jmxremote.port=9990 
 kafka_gc_log_opts: 
-kafka_opts: -javaagent:/opt/prometheus/jmx_prometheus_javaagent-0.16.0.jar=7000:/opt/prometheus/kafka-2.yml -javaagent:/opt/jolokia/jolokia-agent.jar=host=*
+kafka_opts: -javaagent:/opt/prometheus/jmx_prometheus_javaagent-0.16.0.jar=7001:/opt/prometheus/kafka-2.yml -javaagent:/opt/jolokia/jolokia-agent.jar=host=*
 jmx_port: 8004
 
 # KAFKA server.properties [1]
