@@ -20,12 +20,12 @@ metadata:
   name: zeppelin-server-conf-map
 data:
   SERVICE_DOMAIN: local.zeppelin-project.org:8080
-  ZEPPELIN_K8S_SPARK_CONTAINER_IMAGE: cuebook/spark:3.0.2.41
-  ZEPPELIN_K8S_CONTAINER_IMAGE: pranav38/zeppelin-interpreter-custom:0.10.1-SNAPSHOT
+  ZEPPELIN_K8S_SPARK_CONTAINER_IMAGE: nemesisdata/spark-py:3.2.1
+  ZEPPELIN_K8S_CONTAINER_IMAGE: nemesisdata/zeppelin-interpreter:0.11.0-SNAPSHOT
   ZEPPELIN_HOME: /opt/zeppelin
   ZEPPELIN_SERVER_RPC_PORTRANGE: 12320:12320
   # default value of 'master' property for spark interpreter.
-  SPARK_MASTER: k8s://https://ip:8443
+  SPARK_MASTER: k8s://https://192.168.49.2:8443
   # default value of 'SPARK_HOME' property for spark interpreter.
   SPARK_HOME: /spark
 ---
@@ -107,7 +107,7 @@ spec:
             path: nginx.conf
       containers:
       - name: zeppelin-server
-        image: apache/zeppelin:0.10.0
+        image: nemesisdata/zeppelin-server:0.11.0-SNAPSHOT
         command: ["sh", "-c", "$(ZEPPELIN_HOME)/bin/zeppelin.sh"]
         lifecycle:
           preStop:
